@@ -1,106 +1,113 @@
+import math
+from collections import defaultdict
+
+class KNN:
+    """
+    KNN class - implements the k-nearest neighbors algorithm
+    """
+    def __init__(self,training_set=[],test_set=[],correct_predictions=[],k=5):
+        self.predictions = []
+        self.accuracy = None
+        self.train_set = training_set
+        self.test_set = test_set
+        self.correct_tags = correct_predictions
+        self.k = k
+
+    def CalcHammingDistance(self,train_row,test_row):
+
+        """
+
+        :param train_row:
+        :param test_row:
+        :return:the distance of the two samples
+        """
+        sum = 0
+        for test_col,train_col in zip(test_row,train_row):
+            if(test_col != train_col):
+                sum += 1
+        return sum
+
+    def computeAccuracy(self):
+        """
+        the function compute the accuracy of the model by checking how many
+        cases the model succeed to predict correct
+
+        :return:None
+        """
+        number_of_correct = 0.
+
+        for pred, y in zip(self.predictions,self.correct_tags):
+            if(pred == y):
+                number_of_correct += 1
+        self.accuracy =number_of_correct/len(self.predictions)
+        print('the accuracy is: {}'.format(self.accuracy))
+        #return self.accuracy
+
+
+    def PredictTag(self,test_case):
+        """
+
+        :param test_case:
+        :param k:
+        :return:the model predict if this case result is survive/not
+        """
+
+        #first we need to find the most k nearest elements:
+        dist = []
+        for neighbor_case in self.train_set:
+            dist.append((neighbor_case[-1],self.CalcHammingDistance(neighbor_case,test_case)))
+
+        #sort array of distances according to second col - which represents the distance value
+        sort_dist = sorted(dist,key=lambda item: item[1])
+        k_nearest_neighbors = []
+        count = 0
+        for index,neighbor in enumerate(sort_dist):
+            if index<self.k:
+                k_nearest_neighbors.append(neighbor)
+
+        frequency_of_survive = defaultdict(int)
+        for neighbor in k_nearest_neighbors:
+            frequency_of_survive[neighbor] += 1
+
+        #return the case of most frequent
+        yes_or_no = max(frequency_of_survive.items(),key=lambda item: item[1])[0][0]
+        return yes_or_no
+
+    def runKnn(self):
+        for case in self.test_set:
+            pred = self.PredictTag(case)
+            self.predictions.append(pred)
+        self.computeAccuracy()
 
 
 
 
+def load_datasets():
+    """
+    load the datasets the model need
+    :return: training_set,test_set,correct_tags
+    """
+    training_set = []
+    correct_tags = []
+    test_set = []
+    with open('train.txt') as train_file:
+        attributes = train_file.readline().split()
+        for line in train_file.readlines()[1:]:
+            training_set.append(tuple(line.split()))
+
+    with open('test.txt') as test_file:
+        for line in test_file.readlines()[1:]:
+            line_cols = line.split()
+            correct_tags.append(line_cols[-1])
+            test_set.append(tuple(line_cols[:-1]))
+
+    return training_set,test_set,correct_tags,attributes
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from collections import defaultdict
-#
-#
-# def hamming_distance(test_example, training_example):
-#     """ return the Hamming distance between examples """
-#
-#     return sum(test_attr != train_attr for test_attr, train_attr in zip(test_example, training_example))
-#
-#
-# def predict(test_example, training_set, k):
-#     """ predicting the output by knn algorithm """
-#     distances = []
-#     # calculate distances for each example in train
-#     for train_example in training_set:
-#         distances.append((train_example[-1], hamming_distance(test_example, train_example[:-1])))
-#     # sort the list of tuples (key, distance) by second value in ascending order
-#     sorted_distances = sorted(distances, key=lambda item: item[1])
-#     # get top k rows from the sorted array
-#     targets = [target for i, target in enumerate(sorted_distances) if i < k]
-#
-#     '''
-#     CALCULATE FREQUENCY OF EACH CLASS IN TARGETS
-#     '''
-#     freq = defaultdict(int)
-#
-#     for target in targets:
-#         freq[target] += 1
-#     # get the most frequent class of these rows
-#     frequent_class = max(freq.items(), key=lambda item: item[1])[0][0]
-#     return frequent_class
-#
-#
-# def calculate_accuracy(predictions, gold_labels):
-#     """ calculating the accuracy of the predictions """
-#     correct = 0.
-#
-#     for prediction, gold_label in zip(predictions, gold_labels):
-#         if prediction == gold_label:
-#             correct += 1
-#
-#     print('accuracy is: {}'.format(correct / len(predictions)))
-#     return correct / len(predictions)
-#
-#
-# def main():
-#     training_set = []
-#     with open('train.txt') as f:
-#         for line in f.readlines()[1:]:
-#             training_set.append(tuple(line.split()))
-#
-#     testing_set = []
-#     gold_labels = []
-#     with open('test.txt') as f:
-#         for line in f.readlines()[1:]:
-#             values = line.split()
-#             testing_set.append(tuple(values[:-1]))
-#             gold_labels.append(values[-1])
-#
-#     '''
-#     TESTING
-#     '''
-#     predictions = []
-#     k = 5
-#     for example in testing_set:
-#         prediction = predict(example, training_set, k)
-#         predictions.append(prediction)
-#
-#     accuracy = calculate_accuracy(predictions, gold_labels)
-#     print(predictions)
-#
-#
-# if __name__ == "__main__":
-#     main()
+if __name__ == '__main__':
+    training_set, test_set, correct_tags,attributes = load_datasets()
+    #create the KNN model with k=5 as required
+    knn_model = KNN(training_set,test_set,correct_tags,5)
+    knn_model.runKnn()
+    print(knn_model.predictions)
+    training_set = []
