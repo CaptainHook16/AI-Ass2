@@ -1,6 +1,7 @@
 import random as rd
 import math
 from collections import defaultdict
+import random as random
 class Node:
     def __init__(self,classification=None,attribute = None):
         self.tag = classification
@@ -178,6 +179,26 @@ def remainder(data, checkedAttribute, attributes, target):
 
 def calcGain(data, checkedAttribute, attributes, target):
     return entropy(data, target, attributes) - remainder(data, checkedAttribute, attributes, target)
+
+def run_ID3(training_set, test_set, correct_tags,attributes):
+    tree = Tree()
+
+    tree.ID3(data=training_set, attributes=attributes, target=attributes[-1])
+
+    predictions = []
+
+    for case in test_set:
+        pred = tree.predict(case, attributes)
+        predictions.append(pred)
+
+    number_of_correct = 0.
+    accuracy = 0
+    for pred, y in zip(predictions, correct_tags):
+        if (pred == y):
+            number_of_correct += 1
+    accuracy = number_of_correct / len(predictions)
+    print('the accuracy is: {}'.format(accuracy))
+    return predictions,accuracy
 
 if __name__ == '__main__':
     training_set, test_set, correct_tags,attributes = load_datasets()

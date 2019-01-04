@@ -104,6 +104,7 @@ def load_datasets():
     return training_set,test_set,correct_tags,attributes
 
 
+
 if __name__ == '__main__':
     training_set, test_set, correct_tags,attributes = load_datasets()
     #create the KNN model with k=5 as required

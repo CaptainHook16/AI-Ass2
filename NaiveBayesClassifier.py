@@ -74,6 +74,26 @@ def load_datasets():
 
     return training_set,test_set,correct_tags,attributes
 
+def run_naive_bayes(training_set, test_set, correct_tags,attributes):
+    target = attributes[-1]
+    vocabulary = get_count_for_each_attributes(training_set)
+    print(vocabulary)
+    # predict(None, training_set, attributes, target, vocabulary)
+
+    predictions = []
+    for case in test_set:
+        pred = predict(case, training_set, attributes, target, vocabulary)
+        predictions.append(pred)
+
+    number_of_correct = 0.
+    accuracy = 0.
+    for pred, y in zip(predictions, correct_tags):
+        if (pred == y):
+            number_of_correct += 1
+    accuracy = number_of_correct / len(predictions)
+    print('the accuracy is: {}'.format(accuracy))
+    return predictions,accuracy
+
 if __name__ == '__main__':
     training_set, test_set, correct_tags,attributes = load_datasets()
     target = attributes[-1]
