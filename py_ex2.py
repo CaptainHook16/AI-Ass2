@@ -5,6 +5,8 @@ import knn as knn_alg
 import tree as ID3
 import NaiveBayesClassifier as nb_alg
 
+#TODO: fix shuffel
+
 def load_datasets():
     """
     load the datasets the model need
