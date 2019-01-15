@@ -39,7 +39,8 @@ class KNN:
         for pred, y in zip(self.predictions,self.correct_tags):
             if(pred == y):
                 number_of_correct += 1
-        self.accuracy =number_of_correct/len(self.predictions)
+        self.accuracy = math.ceil(number_of_correct / len(self.predictions) * 100) / 100
+        #self.accuracy =number_of_correct/len(self.predictions)
         print('the accuracy is: {}'.format(self.accuracy))
         #return self.accuracy
 
