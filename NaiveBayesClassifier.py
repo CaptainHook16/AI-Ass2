@@ -129,8 +129,38 @@ def run_naive_bayes(training_set, test_set, correct_tags,attributes):
     print(len(predictions))
     return predictions,accuracy
 
+def NBresults():
+    training_set, test_set, correct_tags, attributes = load_datasets()
+    #run_naive_bayes(training_set, test_set, correct_tags, attributes)
+    target = attributes[-1]
+    vocabulary = get_count_for_each_attributes(training_set)
+    # print(vocabulary)
+    # predict(None, training_set, attributes, target, vocabulary)
+
+    predictions = []
+    print("len of test")
+    print(test_set)
+    print(len(test_set))
+    for case in test_set:
+        pred = predict(case, training_set, attributes, target)
+        predictions.append(pred)
+
+    number_of_correct = 0.
+    accuracy = 0.
+    for pred, y in zip(predictions, correct_tags):
+        if (pred == y):
+            number_of_correct += 1
+    accuracy = math.ceil(number_of_correct / len(predictions) * 100) / 100
+    # accuracy = number_of_correct / len(predictions)
+    print('the accuracy is: {}'.format(accuracy))
+    print(predictions)
+    print(len(predictions))
+    return predictions, accuracy
+
 if __name__ == '__main__':
     training_set, test_set, correct_tags,attributes = load_datasets()
+    print("corrects")
+    print(len(correct_tags))
     run_naive_bayes(training_set,test_set,correct_tags,attributes)
     # target = attributes[-1]
     # vocabulary = get_count_for_each_attributes(training_set)

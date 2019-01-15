@@ -196,12 +196,38 @@ def run_ID3(training_set, test_set, correct_tags,attributes):
     for pred, y in zip(predictions, correct_tags):
         if (pred == y):
             number_of_correct += 1
-    accuracy = number_of_correct / len(predictions)
+    accuracy = math.ceil(number_of_correct / len(predictions) * 100) / 100
+   # accuracy = number_of_correct / len(predictions)
     print('the accuracy is: {}'.format(accuracy))
     return predictions,accuracy
 
+def ID3results():
+    training_set, test_set, correct_tags, attributes = load_datasets()
+    tree = Tree()
+
+    tree.ID3(data=training_set, attributes=attributes, target=attributes[-1])
+
+    predictions = []
+
+    for case in test_set:
+        pred = tree.predict(case, attributes)
+        predictions.append(pred)
+
+    number_of_correct = 0.
+    accuracy = 0
+    for pred, y in zip(predictions, correct_tags):
+        if (pred == y):
+            number_of_correct += 1
+    accuracy = math.ceil(number_of_correct / len(predictions) * 100) / 100
+    # accuracy = number_of_correct / len(predictions)
+    print('the accuracy is: {}'.format(accuracy))
+    return predictions, accuracy
+    #run_ID3(training_set, test_set, correct_tags, attributes)
+
 if __name__ == '__main__':
     training_set, test_set, correct_tags,attributes = load_datasets()
+    print("corrects")
+    print(len(correct_tags))
     tree = Tree()
     tree.ID3(data=training_set,attributes=attributes,target=attributes[-1])
 

@@ -30,15 +30,35 @@ def load_datasets():
 
     return training_set,test_set,correct_tags,attributes
 
+def output_predictions(tree_data, knn_data, nb_data, predictions_len, output_file_path):
+    """ save all the models predictions to the output file """
+    """ tree_data is in format of tuple: (tree_predictions, tree_accuracy) and etc. for each one of them """
+
+    with open(output_file_path, 'w') as f:
+
+        f.write('{}\t{}\t{}\t{}\n'.format('Num', 'DT', 'KNN', 'naiveBase'))
+        for index in range(predictions_len):
+            f.write('{}\t{}\t{}\t{}\n'.format(index + 1, tree_data[0][index], knn_data[0][index], nb_data[0][index]))
+
+        f.write('{}\t{}\t{}\t{}'.format('', str(tree_data[1]), str(knn_data[1]), str(nb_data[1])))
+
+
 if __name__ == '__main__':
-    training_set, test_set, correct_tags, attributes = load_datasets()
-    preds_Naive_bayes = nb_alg.run_naive_bayes(training_set, test_set, correct_tags, attributes)
-    print(preds_Naive_bayes)
-    id3_preds = ID3.run_ID3(training_set, test_set, correct_tags, attributes)
-    print(id3_preds)
-    knn_model = knn_alg.KNN(training_set, test_set, correct_tags, 5)
-    knn_model.runKnn()
-    print(knn_model.predictions,knn_model.accuracy)
+    predsKNN,accuracyKNN,corrects = knn_alg.runKnn()
+    predsNB, accuracyNB = nb_alg.NBresults()
+    predsID3, accuracyID3 = ID3.ID3results()
+
+
+    output_predictions((predsID3,accuracyID3),(predsKNN,accuracyKNN),(predsNB,accuracyNB),len(corrects),'output.txt')
+
+    # training_set, test_set, correct_tags, attributes = load_datasets()
+    #preds_Naive_bayes = nb_alg.run_naive_bayes(training_set, test_set, correct_tags, attributes)
+    # print(preds_Naive_bayes)
+    # id3_preds = ID3.run_ID3(training_set, test_set, correct_tags, attributes)
+    # print(id3_preds)
+    # knn_model = knn_alg.KNN(training_set, test_set, correct_tags, 5)
+    # knn_model.runKnn()
+    # print(knn_model.predictions,knn_model.accuracy)
 
 
 #

@@ -104,10 +104,18 @@ def load_datasets():
 
     return training_set,test_set,correct_tags,attributes
 
-
+def runKnn():
+    training_set, test_set, correct_tags, attributes = load_datasets()
+    # create the KNN model with k=5 as required
+    knn_model = KNN(training_set, test_set, correct_tags, 5)
+    knn_model.runKnn()
+    # print(knn_model.predictions)
+    return knn_model.predictions,knn_model.accuracy,correct_tags
 
 if __name__ == '__main__':
     training_set, test_set, correct_tags,attributes = load_datasets()
+    print("corrects")
+    print(len(correct_tags))
     #create the KNN model with k=5 as required
     knn_model = KNN(training_set,test_set,correct_tags,5)
     knn_model.runKnn()
