@@ -1,6 +1,7 @@
 import math
 from collections import defaultdict
-
+TEST_DATA = "test.txt"
+TRAIN_DATA = "train.txt"
 def max_probability(probs):
     return max(probs,key=lambda item: item[1])[0]
 
@@ -88,13 +89,13 @@ def load_datasets():
     training_set = []
     correct_tags = []
     test_set = []
-    with open('train.txt') as train_file:
+    with open(TRAIN_DATA) as train_file:
         attributes = train_file.readline().split()
         for line in train_file.readlines():
             training_set.append(tuple(line.split()))
 
 
-    with open('test.txt') as test_file:
+    with open(TEST_DATA) as test_file:
         _ = test_file.readline().split()
         for line in test_file.readlines():
             line_cols = line.split()

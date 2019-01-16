@@ -1,6 +1,9 @@
 import math
 from collections import defaultdict
 
+TEST_DATA = "test.txt"
+TRAIN_DATA= "train.txt"
+
 class KNN:
     """
     KNN class - implements the k-nearest neighbors algorithm
@@ -91,12 +94,12 @@ def load_datasets():
     training_set = []
     correct_tags = []
     test_set = []
-    with open('train.txt') as train_file:
+    with open(TRAIN_DATA) as train_file:
         attributes = train_file.readline().split()
         for line in train_file.readlines()[1:]:
             training_set.append(tuple(line.split()))
 
-    with open('test.txt') as test_file:
+    with open(TEST_DATA) as test_file:
         for line in test_file.readlines()[1:]:
             line_cols = line.split()
             correct_tags.append(line_cols[-1])

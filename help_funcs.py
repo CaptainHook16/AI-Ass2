@@ -86,11 +86,11 @@ def print_tree(root, tabs=""):
     next.sort(key=operator.itemgetter(0))
 
     for value,n in next:
-        if n.classification is None:
+        if n.tag is None:
             t.write("{}{}={}\n".format(tabs, I2F[root.attribute], value))
             print_tree(n, tabs.split('|')[0] + "\t|")
         else:
-            t.write("{}{}={}:{}\n".format(tabs, I2F[root.attribute], value, I2L[n.classification]))
+            t.write("{}{}={}:{}\n".format(tabs, I2F[root.attribute], value, I2L[n.tag]))
 
     t.close()
 
